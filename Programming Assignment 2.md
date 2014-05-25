@@ -1,0 +1,52 @@
+
+## This set of functions creates a matrix in another environment and computes the inverse 
+# of the matrix only if it has not yet been calculated
+
+
+
+## Assign a value to an object (matrix) in an environment that is different from the current environment.
+
+makeCacheMatrix <- function(x = matrix()) {
+  
+  s <- NULL
+ 
+  set <- function(y) {
+    x <<- y
+    s <<- NULL
+  }
+  get <- function() x
+  setinverse <- function(solve) s <<- solve
+  getinverse <- function() s
+  list(set = set, get = get, 
+       setinverse = setinverse,
+       getinverse = getinverse)
+}
+
+
+
+## This function computes the inverse of the special "matrix" returned by makeCacheMatrix above.
+# If the inverse has already been calculated (and the matrix has not changed), 
+# then this function retrieve the inverse from the cache and don't calculated the inverse again.
+
+cacheSolve <- function(x, ...) {
+  ## Return a matrix that is the inverse of 'x'
+  s <- x$getinverse()
+  
+  if(!is.null(s)) {
+    message("there is an inverse calculated previously, getting cached data")
+     return(s)}
+    else{
+      data <- x$get()
+
+message("setting new inverse")
+s <- solve(data, ...)
+x$setinverse(s)
+s
+  }
+}
+
+
+
+
+
+==========
